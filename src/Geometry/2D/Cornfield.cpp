@@ -1,5 +1,7 @@
 #include "Geometry/2D/Cornfield.hpp"
 
+#include <glm/glm.hpp>
+#include <cmath>
 //#include <iostream>
 
 Cornfield::Cornfield() {
@@ -11,8 +13,9 @@ Cornfield::Cornfield(float len, unsigned int smpl_rt) : length(len), sample_rate
 }
 
 void Cornfield::GenerateVertices() {
+    // TODO: 加入 sample rate
 
-    float start = 0;
+    float start = -100;
     float end = start + length;
 
     for (int i = start; i < end; ++i) {
@@ -39,5 +42,14 @@ void Cornfield::GenerateVertices() {
 }
 
 float Cornfield::EvaluateScore(float x, float z) {
-    return static_cast<float>(sqrt(pow((x - 100), 2) + pow((z - 100), 2)));
+    // TODO: 可以嘗試做好幾種模式，比如布林噪音、或是其他最佳化曲面
+
+    // 論文提供的公式，最小值的位置為 (0, 0)。
+    // return static_cast<float>(sqrt(pow((x - 0), 2)) + sqrt(pow((z - 0), 2)));
+
+    // 歐基里德距離公式，看起來會很圓滑，最小值的位置為 (0, 0)。
+    return static_cast<float>(sqrt(pow((x - 0), 2) + pow((z - 0), 2)));
+
+    // Schaffer's F6
+    // return static_cast<float>(0.5 + (pow(glm::sin(sqrt(pow(x, 2) + pow(z, 2))), 2) - 0.5) / pow((1 + 0.001 * (pow(x, 2) + pow(z, 2))), 2) );
 }

@@ -17,6 +17,8 @@ enum CameraMovement : unsigned int {
 struct Camera {
     Camera(glm::vec3 pos, bool is_prscpt = false);
 
+    // TODO: 需要球型坐標系相機以及正交投影切換功能
+
     struct Viewport {
         int x;
         int y;

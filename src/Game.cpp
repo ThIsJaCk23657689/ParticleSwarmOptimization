@@ -5,6 +5,7 @@
 Game::Game() {
     // TODO:: Create Shader
     basic_shader = std::make_unique<Shader>("assets/shaders/basic.vert", "assets/shaders/basic.frag");
+    cornfield_shader = std::make_unique<Shader>("assets/shaders/cornfield.vert", "assets/shaders/cornfield.frag");
 
     // TODO:: Model Matrix Stack
 
@@ -42,16 +43,18 @@ void Game::Render(float dt) {
     basic_shader->SetMat4("view", view);
     basic_shader->SetMat4("projection", projection);
 
-    basic_shader->SetVec3("objectColor", glm::vec3(0.2f, 0.4f, 0.12f));
-    basic_shader->SetMat4("model", glm::mat4(1.0f));
-    state.world->my_triangle->Draw();
+//    basic_shader->SetVec3("objectColor", glm::vec3(0.2f, 0.4f, 0.12f));
+//    basic_shader->SetMat4("model", glm::mat4(1.0f));
+//    state.world->my_triangle->Draw();
 
-    basic_shader->SetVec3("objectColor", glm::vec3(0.147f, 0.742f, 0.43475f));
+    basic_shader->SetVec3("objectColor", glm::vec3(0.347f, 0.46742f, 0.83475f));
     basic_shader->SetMat4("model", glm::mat4(1.0f));
     state.world->my_rectangle->Draw();
 
-    basic_shader->SetVec3("objectColor", glm::vec3(0.887f, 0.542f, 0.13475f));
-    basic_shader->SetMat4("model", glm::mat4(1.0f));
+    cornfield_shader->Use();
+    cornfield_shader->SetMat4("view", view);
+    cornfield_shader->SetMat4("projection", projection);
+    cornfield_shader->SetMat4("model", glm::mat4(1.0f));
     state.world->my_cornfield->Draw();
 }
 

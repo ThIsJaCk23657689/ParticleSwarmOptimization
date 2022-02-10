@@ -32,6 +32,7 @@ private:
 
     // TODO:: Make a Shader Manager to create
     std::unique_ptr<Shader> basic_shader = nullptr;
+    std::unique_ptr<Shader> cornfield_shader = nullptr;
 };
 
 #endif

@@ -13,7 +13,7 @@ Camera::Camera(glm::vec3 pos, bool is_prscpt) :
     front(glm::vec3(0.0, 0.0, -1.0)),
     right(glm::vec3(1.0, 0.0, 0.0)),
     up(glm::vec3(0.0, 1.0, 0.0)),
-    move_speed(50.0f),
+    move_speed(150.0f),
     mouse_sensitivity(0.1f),
     zoom(45.0f),
     mouse_control(false),
