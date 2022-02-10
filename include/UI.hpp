@@ -6,14 +6,31 @@
 
 #include <string>
 
+#include <SDL.h>
+#include <imgui.h>
+
+#include <string>
+
 struct UI {
-    UI(SDL_Window* window, SDL_GLContext gl_context);
+    UI(SDL_Window* window, SDL_GLContext glContext);
 
     SDL_Window* WindowHandler;
     SDL_GLContext GLContext;
     bool WantCaptureEvent = false;
 
     struct Windows {
+        struct CameraInfo {
+            bool Visible = false;
+            int WindowFlags = 0;
+        } CameraInfo;
+        struct ProjectionInfo {
+            bool Visible = false;
+            int WindowFlags = 0;
+        } ProjectionInfo;
+        struct Settings {
+            bool Visible = false;
+            int WindowFlags = 0;
+        } Settings;
         struct About {
             bool Visible = false;
             int WindowFlags = 0;
@@ -34,6 +51,11 @@ struct UI {
 private:
     void MenuBarRender();
     void WindowsRender();
+
+    void CameraInfoRender();
+    void ProjectionInfoRender();
+    void SettingsRender();
+    void AboutRender();
 };
 
 #endif

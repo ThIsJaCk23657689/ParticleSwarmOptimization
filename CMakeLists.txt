@@ -71,6 +71,7 @@ file(GLOB MY_SOURCE CONFIGURE_DEPENDS
     "src/Geometry/*.cpp"
     "src/Geometry/2D/*.cpp"
     "src/Geometry/3D/*.cpp"
+    "src/Light/*.cpp"
     "src/Shader/*.cpp"
     "src/Util/*.cpp"
     "src/World/*.cpp"

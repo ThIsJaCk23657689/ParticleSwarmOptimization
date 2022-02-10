@@ -14,12 +14,22 @@ Game::Game() {
 }
 
 void Game::Update(float dt) {
-
+    state.world->my_camera->Update(dt);
 }
 
 void Game::Render(float dt) {
-    glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), state.window->width / static_cast<float>(state.window->height), 0.1f, 500.0f);
+
+    // 是否開啟 Back Face Culling
+    if (state.world->culling) {
+        glEnable(GL_CULL_FACE);
+    } else {
+        glDisable(GL_CULL_FACE);
+    }
+
+    state.world->my_camera->SetViewPort();
+
+    glm::mat4 view = state.world->my_camera->View();
+    glm::mat4 projection = state.world->my_camera->Projection();
 
     basic_shader->Use();
     basic_shader->SetMat4("view", view);
@@ -28,6 +38,10 @@ void Game::Render(float dt) {
     basic_shader->SetVec3("objectColor", glm::vec3(0.2f, 0.4f, 0.12f));
     basic_shader->SetMat4("model", glm::mat4(1.0f));
     state.world->my_triangle->Draw();
+
+    basic_shader->SetVec3("objectColor", glm::vec3(0.147f, 0.742f, 0.43475f));
+    basic_shader->SetMat4("model", glm::mat4(1.0f));
+    state.world->my_rectangle->Draw();
 }
 
 void Game::HandleEvents() {
@@ -50,7 +64,8 @@ void Game::HandleEvents() {
 
     // 執行攝影機的控制，這邊事件觸發並不是透過 SDL_Event ，而是透過像是 SDL_GetKeyboardState() 和 SDL_GetRelativeMouseState() 去控制的。
     // Camera Event Handler
-    // TODO: Camera Control
+    state.world->my_camera->ProcessKeyboard();
+    state.world->my_camera->ProcessMouseMovement();
 }
 
 void Game::PollEvents() {
@@ -86,7 +101,7 @@ void Game::GlobalEvents(const SDL_Event &event) {
                 }
             }
             if (event.key.keysym.sym == SDLK_TAB) {
-                // TODO: Toggle Camera Control
+                state.world->my_camera->ToggleMouseControl();
             }
             break;
         case SDL_WINDOWEVENT:
@@ -148,6 +163,7 @@ void Game::OnMouseMotionEvent(const SDL_MouseMotionEvent& e) {
 }
 
 void Game::OnMouseWheelEvent(const SDL_MouseWheelEvent& e) {
+    state.world->my_camera->ProcessMouseScroll(e.y);
 }
 
 void Game::OnWindowEvent(const SDL_WindowEvent& e) {

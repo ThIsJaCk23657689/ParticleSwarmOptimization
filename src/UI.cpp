@@ -5,7 +5,7 @@
 #include <imgui_impl_sdl.h>
 #include <glm/gtc/type_ptr.hpp>
 
-//#include "World.hpp"
+#include "State.hpp"
 
 UI::UI(SDL_Window* window, SDL_GLContext glContext) : WindowHandler(window), GLContext(glContext) {
     Create();
@@ -50,7 +50,9 @@ void UI::ProcessEvent(const SDL_Event &event) {
 void UI::MenuBarRender() {
     if (ImGui::BeginMainMenuBar()) {
         if (ImGui::BeginMenu("Edit##menubar-edit")) {
-            // ImGui::MenuItem("Camera Info", nullptr, &Windows.CameraInfo.Visible);
+            ImGui::MenuItem("Camera Info", nullptr, &Windows.CameraInfo.Visible);
+            ImGui::MenuItem("Projection Info", nullptr, &Windows.ProjectionInfo.Visible);
+            ImGui::MenuItem("Settings", nullptr, &Windows.Settings.Visible);
             ImGui::EndMenu();
         }
 
@@ -72,24 +74,113 @@ void UI::MenuBarRender() {
 }
 
 void UI::WindowsRender() {
+
+    CameraInfoRender();
+    ProjectionInfoRender();
+    SettingsRender();
+    AboutRender();
+
+#ifndef NDEBUG
+    // Demo Window Render
+    if (Windows.Demo.Visible) {
+        ImGui::ShowDemoWindow(&Windows.Demo.Visible);
+    }
+#endif
+}
+
+void UI::CameraInfoRender() {
+    // Camera Info Window Render
+    if (Windows.CameraInfo.Visible) {
+        ImGui::SetNextWindowSize(ImVec2(300, 250), ImGuiCond_Once);
+        ImGui::Begin("Camera Info", &Windows.CameraInfo.Visible, Windows.CameraInfo.WindowFlags);
+
+        if (ImGui::BeginTabBar("TabBar##Window_CameraInfo")) {
+
+            if (ImGui::BeginTabItem("Camera")) {
+                ImGui::Text("Position = (%.2f, %.2f, %.2f)",
+                            state.world->my_camera->position.x,
+                            state.world->my_camera->position.y,
+                            state.world->my_camera->position.z);
+                ImGui::Text("Velocity = (%.2f, %.2f, %.2f)",
+                            state.world->my_camera->velocity.x,
+                            state.world->my_camera->velocity.y,
+                            state.world->my_camera->velocity.z);
+                ImGui::Text("Front = (%.2f, %.2f, %.2f)",
+                            state.world->my_camera->front.x,
+                            state.world->my_camera->front.y,
+                            state.world->my_camera->front.z);
+                ImGui::Text("Right = (%.2f, %.2f, %.2f)",
+                            state.world->my_camera->right.x,
+                            state.world->my_camera->right.y,
+                            state.world->my_camera->right.z);
+                ImGui::Text("Up = (%.2f, %.2f, %.2f)",
+                            state.world->my_camera->up.x,
+                            state.world->my_camera->up.y,
+                            state.world->my_camera->up.z);
+                ImGui::Text("World Up = (%.2f, %.2f, %.2f)",
+                            state.world->my_camera->world_up.x,
+                            state.world->my_camera->world_up.y,
+                            state.world->my_camera->world_up.z);
+                ImGui::Text("Pitch = %.2f deg", state.world->my_camera->pitch);
+                ImGui::Text("Yaw = %.2f deg", state.world->my_camera->yaw);
+                ImGui::EndTabItem();
+            }
+            ImGui::EndTabBar();
+        }
+        ImGui::End();
+    }
+}
+
+void UI::ProjectionInfoRender() {
+    // Projection Window Render
+    if (Windows.ProjectionInfo.Visible) {
+        ImGui::SetNextWindowSize(ImVec2(450, 180), ImGuiCond_Once);
+        ImGui::Begin("Projection Info", &Windows.ProjectionInfo.Visible, Windows.ProjectionInfo.WindowFlags);
+        if (ImGui::BeginTabBar("TabBar##Window_ProjectionInfo")) {
+            if (ImGui::BeginTabItem("Projection")) {
+                ImGui::Text("Parameters:");
+                ImGui::BulletText("FoV = %.2f deg, Aspect = %.2f", state.world->my_camera->zoom, state.world->my_camera->AspectRatio());
+                ImGui::DragFloatRange2("Near / Far", &state.world->my_camera->frustum.near, &state.world->my_camera->frustum.far, 1.0f, 0.1f, 500.0f);
+                ImGui::Spacing();
+                ImGui::EndTabItem();
+            }
+            ImGui::EndTabBar();
+        }
+        ImGui::End();
+    }
+}
+
+void UI::SettingsRender() {
+    // Settings Window Render
+    if (Windows.Settings.Visible) {
+        ImGui::SetNextWindowSize(ImVec2(380, 150), ImGuiCond_Once);
+        ImGui::Begin("Settings", &Windows.Settings.Visible, Windows.Settings.WindowFlags);
+        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
+                    1000.0f / ImGui::GetIO().Framerate,
+                    ImGui::GetIO().Framerate);
+        ImGui::Checkbox("Back Face Culling", &state.world->culling);
+        ImGui::End();
+    }
+}
+
+void UI::AboutRender() {
     Windows.About.WindowFlags = ImGuiWindowFlags_NoResize;
 
     // About Window Render
     if (Windows.About.Visible) {
         ImGui::Begin("About##Window_About", &Windows.About.Visible, Windows.About.WindowFlags);
         ImGui::SetWindowFontScale(1.2f);
-        ImGui::Text("NTOU OpenGL Template - Camera");
+        ImGui::Text("Particle Swarm Optimization");
         ImGui::SetWindowFontScale(1.0f);
         if (ImGui::BeginTabBar("TabBar##Window_About")) {
+
             if (ImGui::BeginTabItem("About##About")) {
                 ImGui::BeginChild("Child##AboutAbout", Windows.About.ChildSize, true);
                 ImGui::TextWrapped(
-                        "An OpenGL template program for students learning Computer Graphics.\n"
-                        "\n"
-                        "Developed at:\n"
-                        "National Taiwan Ocean University\n"
-                        "\n"
-                        "Copyright 2022, NTOU CSE 503 Authors\n");
+                    "Developed at:\n"
+                    "National Taiwan Ocean University\n"
+                    "\n"
+                    "Copyright 2022, NTOU CSE 503 Authors\n");
                 ImGui::EndChild();
                 ImGui::EndTabItem();
             }
@@ -97,25 +188,25 @@ void UI::WindowsRender() {
             if (ImGui::BeginTabItem("Components##About")) {
                 ImGui::BeginChild("Child##AboutComponents", Windows.About.ChildSize, true);
                 ImGui::Text(
-                        "SDL2\n"
-                        "Version %d.%d.%d\n"
-                        "https://www.libsdl.org/\n",
-                        SDL_MAJOR_VERSION,
-                        SDL_MINOR_VERSION,
-                        SDL_PATCHLEVEL);
+                    "SDL2\n"
+                    "Version %d.%d.%d\n"
+                    "https://www.libsdl.org/\n",
+                    SDL_MAJOR_VERSION,
+                    SDL_MINOR_VERSION,
+                    SDL_PATCHLEVEL);
                 ImGui::Text(" ");
                 ImGui::Separator();
                 ImGui::Text("glad\nVersion 0.1.34\n");
                 ImGui::Text(" ");
                 ImGui::Separator();
-                ImGui::Text("glm\nVersion 0.9.9.8\n");
+                ImGui::Text("glm\nVersion %d.%d.%d.%d\n", GLM_VERSION_MAJOR, GLM_VERSION_MINOR, GLM_VERSION_PATCH, GLM_VERSION_REVISION);
                 ImGui::Text(" ");
                 ImGui::Separator();
                 ImGui::Text(
-                        "Dear ImGui\n"
-                        "Version %s\n"
-                        "https://github.com/ocornut/imgui\n",
-                        IMGUI_VERSION);
+                    "Dear ImGui\n"
+                    "Version %s\n"
+                    "https://github.com/ocornut/imgui\n",
+                    IMGUI_VERSION);
                 ImGui::EndChild();
                 ImGui::EndTabItem();
             }
@@ -131,11 +222,4 @@ void UI::WindowsRender() {
         }
         ImGui::End();
     }
-
-#ifndef NDEBUG
-    // Demo Window Render
-    if (Windows.Demo.Visible) {
-        ImGui::ShowDemoWindow(&Windows.Demo.Visible);
-    }
-#endif
 }
