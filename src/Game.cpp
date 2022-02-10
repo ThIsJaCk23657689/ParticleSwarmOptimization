@@ -26,6 +26,13 @@ void Game::Render(float dt) {
         glDisable(GL_CULL_FACE);
     }
 
+    if (state.world->wire_mode) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    } else {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
+
+    state.world->my_camera->viewport = { 0, 0, state.window->width, state.window->height };
     state.world->my_camera->SetViewPort();
 
     glm::mat4 view = state.world->my_camera->View();
@@ -42,6 +49,10 @@ void Game::Render(float dt) {
     basic_shader->SetVec3("objectColor", glm::vec3(0.147f, 0.742f, 0.43475f));
     basic_shader->SetMat4("model", glm::mat4(1.0f));
     state.world->my_rectangle->Draw();
+
+    basic_shader->SetVec3("objectColor", glm::vec3(0.887f, 0.542f, 0.13475f));
+    basic_shader->SetMat4("model", glm::mat4(1.0f));
+    state.world->my_cornfield->Draw();
 }
 
 void Game::HandleEvents() {

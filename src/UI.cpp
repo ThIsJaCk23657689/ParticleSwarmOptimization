@@ -159,6 +159,7 @@ void UI::SettingsRender() {
                     1000.0f / ImGui::GetIO().Framerate,
                     ImGui::GetIO().Framerate);
         ImGui::Checkbox("Back Face Culling", &state.world->culling);
+        ImGui::Checkbox("Wire Mode", &state.world->wire_mode);
         ImGui::End();
     }
 }

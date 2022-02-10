@@ -8,6 +8,7 @@
 
 #include "Geometry/2D/Triangle.hpp"
 #include "Geometry/2D/Rectangle.hpp"
+#include "Geometry/2D/Cornfield.hpp"
 
 #include "Camera.hpp"
 
@@ -15,11 +16,13 @@ struct World {
     // Geometry Shapes
     std::unique_ptr<Triangle> my_triangle = nullptr;
     std::unique_ptr<Rectangle> my_rectangle = nullptr;
+    std::unique_ptr<Cornfield> my_cornfield = nullptr;
 
     // Camera
     std::unique_ptr<Camera> my_camera = nullptr;
 
     bool culling = false;
+    bool wire_mode = false;
 
     void create();
 };
