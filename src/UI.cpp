@@ -52,6 +52,7 @@ void UI::MenuBarRender() {
         if (ImGui::BeginMenu("Edit##menubar-edit")) {
             ImGui::MenuItem("Camera Info", nullptr, &Windows.CameraInfo.Visible);
             ImGui::MenuItem("Projection Info", nullptr, &Windows.ProjectionInfo.Visible);
+            ImGui::MenuItem("Lightning Info", nullptr, &Windows.LightningInfo.Visible);
             ImGui::MenuItem("Settings", nullptr, &Windows.Settings.Visible);
             ImGui::EndMenu();
         }
@@ -77,6 +78,7 @@ void UI::WindowsRender() {
 
     CameraInfoRender();
     ProjectionInfoRender();
+    LightningInfoRender();
     SettingsRender();
     AboutRender();
 
@@ -149,6 +151,32 @@ void UI::ProjectionInfoRender() {
         ImGui::End();
     }
 }
+
+void UI::LightningInfoRender() {
+    // Lightning Window Render
+    if (Windows.LightningInfo.Visible) {
+        ImGui::SetNextWindowSize(ImVec2(400, 180), ImGuiCond_Once);
+        ImGui::Begin("Lightning Info", &Windows.LightningInfo.Visible, Windows.LightningInfo.WindowFlags);
+        ImGui::SliderFloat("Shininess", &state.world->shininess, 1.0f, 512.0f);
+        ImGui::Spacing();
+        if (ImGui::BeginTabBar("TabBar##Window_LightningInfo")) {
+            if (ImGui::BeginTabItem("SpotLight"))  {
+                ImGui::Checkbox("Enable", &state.world->my_spotlight->enable);
+                ImGui::SliderFloat3("Position", glm::value_ptr(state.world->my_spotlight->position), -50.0f, 50.0f);
+                ImGui::SliderFloat3("Direction", glm::value_ptr(state.world->my_spotlight->direction), -1.0f, 1.0f);
+                if (ImGui::ColorEdit3("Color", glm::value_ptr(state.world->my_spotlight->color))) {
+                    state.world->my_spotlight->UpdateColor();
+                }
+                ImGui::DragFloatRange2("Cutoff", &state.world->my_spotlight->cutoff, &state.world->my_spotlight->outer_cutoff, 1.0f, 1.0f, 90.0f);
+                ImGui::EndTabItem();
+            }
+
+            ImGui::EndTabBar();
+        }
+        ImGui::End();
+    }
+}
+
 
 void UI::SettingsRender() {
     // Settings Window Render

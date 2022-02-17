@@ -12,6 +12,8 @@
 
 #include "Camera.hpp"
 
+#include "Light/Light.hpp"
+
 struct World {
     // Geometry Shapes
     std::unique_ptr<Triangle> my_triangle = nullptr;
@@ -20,6 +22,12 @@ struct World {
 
     // Camera
     std::unique_ptr<Camera> my_camera = nullptr;
+
+    // Material
+    float shininess = 4.0f;
+
+    // Lighting
+    std::unique_ptr<Light> my_spotlight = nullptr;
 
     bool culling = false;
     bool wire_mode = false;

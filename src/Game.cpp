@@ -16,6 +16,9 @@ Game::Game() {
 
 void Game::Update(float dt) {
     state.world->my_camera->Update(dt);
+
+    state.world->my_spotlight->position = state.world->my_camera->position;
+    state.world->my_spotlight->direction = state.world->my_camera->front;
 }
 
 void Game::Render(float dt) {
@@ -43,11 +46,30 @@ void Game::Render(float dt) {
     basic_shader->SetMat4("view", view);
     basic_shader->SetMat4("projection", projection);
 
+    // Setting Lighting
+    basic_shader->SetBool("useLighting", true);
+    basic_shader->SetBool("useBlinnPhong", true);
+    basic_shader->SetFloat("shininess", state.world->shininess);
+    basic_shader->SetVec3("viewPos", state.world->my_camera->position);
+
+    basic_shader->SetVec3("lights[0].position", state.world->my_spotlight->position);
+    basic_shader->SetVec3("lights[0].direction", state.world->my_spotlight->direction);
+    basic_shader->SetVec3("lights[0].ambient", state.world->my_spotlight->ambient);
+    basic_shader->SetVec3("lights[0].diffuse", state.world->my_spotlight->diffuse);
+    basic_shader->SetVec3("lights[0].specular", state.world->my_spotlight->specular);
+    basic_shader->SetFloat("lights[0].constant", state.world->my_spotlight->constant);
+    basic_shader->SetFloat("lights[0].linear", state.world->my_spotlight->linear);
+    basic_shader->SetFloat("lights[0].quadratic", state.world->my_spotlight->quadratic);
+    basic_shader->SetFloat("lights[0].cutoff", glm::cos(glm::radians(state.world->my_spotlight->cutoff)));
+    basic_shader->SetFloat("lights[0].outerCutoff", glm::cos(glm::radians(state.world->my_spotlight->outer_cutoff)));
+    basic_shader->SetBool("lights[0].enable", state.world->my_spotlight->enable);
+    basic_shader->SetInt("lights[0].caster", state.world->my_spotlight->caster);
+
 //    basic_shader->SetVec3("objectColor", glm::vec3(0.2f, 0.4f, 0.12f));
 //    basic_shader->SetMat4("model", glm::mat4(1.0f));
 //    state.world->my_triangle->Draw();
 
-    basic_shader->SetVec3("objectColor", glm::vec3(0.347f, 0.46742f, 0.83475f));
+    basic_shader->SetVec3("objectColor", glm::vec3(0.0, 1.0, 0.0));
     basic_shader->SetMat4("model", glm::mat4(1.0f));
     state.world->my_rectangle->Draw();
 
@@ -148,10 +170,13 @@ void Game::SceneEvents(const SDL_Event &event) {
 }
 
 void Game::OnKeyDownEvent(const SDL_KeyboardEvent& e) {
-//    switch (e.keysym.sym) {
-//        default:
-//            break;
-//    }
+    switch (e.keysym.sym) {
+        case SDLK_f:
+            state.world->my_spotlight->enable = !state.world->my_spotlight->enable;
+            break;
+        default:
+            break;
+    }
 }
 
 void Game::OnMouseButtonEvent(const SDL_MouseButtonEvent& e) {

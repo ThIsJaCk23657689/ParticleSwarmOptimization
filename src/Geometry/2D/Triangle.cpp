@@ -6,9 +6,9 @@ Triangle::Triangle() {
 
 void Triangle::GenerateVertices() {
     vertices = {
-        Vertex { {-0.5f, -0.5f,  0.0f } },
-        Vertex { { 0.5f, -0.5f,  0.0f } },
-        Vertex { { 0.0f,  0.5f,  0.0f } },
+        Vertex { {-0.5f, -0.5f,  0.0f }, { 0.0, 0.0, 1.0 } },
+        Vertex { { 0.5f, -0.5f,  0.0f }, { 0.0, 0.0, 1.0 } },
+        Vertex { { 0.0f,  0.5f,  0.0f }, { 0.0, 0.0, 1.0 } },
     };
 
     indices = {

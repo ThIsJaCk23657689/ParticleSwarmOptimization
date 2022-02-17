@@ -16,28 +16,28 @@ void Rectangle::GenerateVertices() {
     switch (orientation) {
         case Orientation::POS_X:
             vertices = {
-                Vertex { { 0.0f,  h,  w } },
-                Vertex { { 0.0f, -h,  w } },
-                Vertex { { 0.0f, -h, -w } },
-                Vertex { { 0.0f,  h, -w } },
+                Vertex { { 0.0f,  h,  w }, { 1.0, 0.0, 0.0 } },
+                Vertex { { 0.0f, -h,  w }, { 1.0, 0.0, 0.0 } },
+                Vertex { { 0.0f, -h, -w }, { 1.0, 0.0, 0.0 } },
+                Vertex { { 0.0f,  h, -w }, { 1.0, 0.0, 0.0 } },
             };
             break;
 
         case Orientation::POS_Y:
             vertices = {
-                Vertex { { -w, 0.0f, -h } },
-                Vertex { { -w, 0.0f,  h } },
-                Vertex { {  w, 0.0f,  h } },
-                Vertex { {  w, 0.0f, -h } },
+                Vertex { { -w, 0.0f, -h }, { 0.0, 1.0, 0.0 } },
+                Vertex { { -w, 0.0f,  h }, { 0.0, 1.0, 0.0 } },
+                Vertex { {  w, 0.0f,  h }, { 0.0, 1.0, 0.0 } },
+                Vertex { {  w, 0.0f, -h }, { 0.0, 1.0, 0.0 } },
             };
             break;
 
         case Orientation::POS_Z:
             vertices = {
-                Vertex { { -w, -h, 0.0f } },
-                Vertex { {  w, -h, 0.0f } },
-                Vertex { {  w,  h, 0.0f } },
-                Vertex { { -w,  h, 0.0f } },
+                Vertex { { -w, -h, 0.0f }, { 0.0, 0.0, 1.0 } },
+                Vertex { {  w, -h, 0.0f }, { 0.0, 0.0, 1.0 } },
+                Vertex { {  w,  h, 0.0f }, { 0.0, 0.0, 1.0 } },
+                Vertex { { -w,  h, 0.0f }, { 0.0, 0.0, 1.0 } },
             };
             break;
     }

@@ -9,7 +9,7 @@ uniform mat4 view;
 uniform mat4 projection;
 
 void main() {
-    float temp = clamp((position.y - 0) / (140 - 0), 0.0f, 1.0f);
-    color = (1 - temp) * vec3(0.74235f, 0.2454f, 0.8723) + temp * vec3(0.78438f, 0.5542046, 0.3156);
+    float temp = clamp((position.y - 0) / (150 - 0), 0.0f, 1.0f);
+    color = (1 - temp) * vec3(0.14235f, 0.2454f, 0.2723) + temp * vec3(0.78438f, 0.5542046, 0.3156);
     gl_Position = projection * view * model * vec4(position, 1.0);
 }
