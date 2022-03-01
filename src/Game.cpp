@@ -73,11 +73,19 @@ void Game::Render(float dt) {
     basic_shader->SetMat4("model", glm::mat4(1.0f));
     state.world->my_rectangle->Draw();
 
-    cornfield_shader->Use();
-    cornfield_shader->SetMat4("view", view);
-    cornfield_shader->SetMat4("projection", projection);
-    cornfield_shader->SetMat4("model", glm::mat4(1.0f));
-    state.world->my_cornfield->Draw();
+//    basic_shader->SetVec3("objectColor", glm::vec3(0.02886, 0.545, 0.58383));
+//    basic_shader->SetMat4("model", glm::mat4(1.0f));
+//    state.world->my_cube->Draw();
+
+    basic_shader->SetVec3("objectColor", glm::vec3(0.143885, 1.0, 0.53835));
+    basic_shader->SetMat4("model", glm::mat4(1.0f));
+    state.world->my_sphere->Draw();
+
+//    cornfield_shader->Use();
+//    cornfield_shader->SetMat4("view", view);
+//    cornfield_shader->SetMat4("projection", projection);
+//    cornfield_shader->SetMat4("model", glm::mat4(1.0f));
+//    state.world->my_cornfield->Draw();
 }
 
 void Game::HandleEvents() {

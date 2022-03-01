@@ -9,6 +9,8 @@
 #include "Geometry/2D/Triangle.hpp"
 #include "Geometry/2D/Rectangle.hpp"
 #include "Geometry/2D/Cornfield.hpp"
+#include "Geometry/3D/Cube.hpp"
+#include "Geometry/3D/Sphere.hpp"
 
 #include "Camera.hpp"
 
@@ -19,6 +21,9 @@ struct World {
     std::unique_ptr<Triangle> my_triangle = nullptr;
     std::unique_ptr<Rectangle> my_rectangle = nullptr;
     std::unique_ptr<Cornfield> my_cornfield = nullptr;
+
+    std::unique_ptr<Cube> my_cube = nullptr;
+    std::unique_ptr<Sphere> my_sphere = nullptr;
 
     // Camera
     std::unique_ptr<Camera> my_camera = nullptr;
